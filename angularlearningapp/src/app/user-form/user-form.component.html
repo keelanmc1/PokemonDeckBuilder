@@ -1,0 +1,61 @@
+<div class="user-form-div">
+    <div class="toggle-buttons">
+        <button (click)="showLoginForm()" [class.active]="isLoginFormVisible">Login</button>
+        <button (click)="showRegisterForm()" [class.active]="!isLoginFormVisible">Register</button>
+    </div>
+    <form class="user-form" #user="ngForm" *ngIf="isLoginFormVisible" [@fade] (ngSubmit)="onSubmit()">
+        <div class="form-container">
+            <div class="card-container">
+                <div class="card p-mb-3 p-p-2">
+                    <span class="p-float-label">
+                        <input pInputText id="username" name="username" [(ngModel)]="users.username" />
+                        <label htmlFor="username">Username</label>
+                    </span>
+                </div>
+            </div>
+            <div class="card-container">
+                <div class="card p-mb-3 p-p-2">
+                    <span class="p-float-label">
+                        <p-password name="password" [feedback]="false" [(ngModel)]="users.password"></p-password>
+                        <label htmlFor="password">Password</label>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <p-button type="submit" label="Login!" [disabled]="!users.username || !users.password" [raised]="true" severity="help"></p-button>
+    </form>
+
+    <form class="user-form" #user="ngForm" *ngIf="!isLoginFormVisible"  (ngSubmit)="onSubmit()">
+        <div class="form-container">
+            <div class="card-container">
+                <div class="card p-mb-3 p-p-2" [ngClass]="{'ng-invalid': !isUsernameValid}">
+                    <span class="p-float-label">
+                        <input pInputText [ngClass]="{'ng-invalid': !isUsernameValid}" id="username" name="username"
+                            [(ngModel)]="users.username"/>
+                        <label htmlFor="username">Username</label>
+                    </span>
+                </div>
+            </div>
+            <div class="card-container">
+                <div class="card p-mb-3 p-p-2">
+                    <span class="p-float-label">
+                        <p-password name="password" [(ngModel)]="users.password"></p-password>
+                        <label htmlFor="password">Password</label>
+                    </span>
+                </div>
+            </div>
+            <div class="card-container">
+                <div class="card p-mb-3 p-p-2">
+                    <span class="p-float-label">
+                        <p-password name="ConfirmPassword" [feedback]="false"></p-password>
+                        <label htmlFor="ConfirmPassword">Confirm Password</label>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+        
+        <p-button type="submit" label="Register!" [disabled]="!users.username || !users.password" [raised]="true" severity="help"></p-button>
+    </form>
+</div>

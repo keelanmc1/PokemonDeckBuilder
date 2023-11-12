@@ -1,0 +1,96 @@
+.user-form-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+    min-width: 200px;
+    max-width: 400px;
+    background: #343230;
+    border-radius: 5%;
+    transition: height 0.5s;
+    padding: 20px;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 450px;
+}
+
+.user-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    transition: 0.5s;
+    padding: 50px;
+}
+
+.form-text {
+    font-family: Montserrat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+}
+
+label {
+    display: block;
+    color: rgb(158, 126, 126);
+}
+
+h2 {
+    color: white;
+    text-align: center;
+}
+
+.btn-submit {
+    background-color: rgb(77, 32, 98);
+    border: none;
+    color: white;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+input {
+    border: none;
+    border-radius: 3px;    
+}
+
+.toggle-buttons {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.toggle-buttons button {
+    background: none;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin: 0 10px;
+    font-size: 16px;
+    text-decoration: none;
+    color: rgb(142, 134, 134);
+    outline: none;
+    border-bottom: 2px solid transparent;
+}
+
+.toggle-buttons button.active, .toggle-buttons button:hover {
+    border-bottom: 2px solid rgb(0, 0, 0);
+}
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-container {
+    width: 100%;
+    margin-bottom: 30px;
+}
+.card.ng-invalid {
+    border: 2px solid red;
+  }

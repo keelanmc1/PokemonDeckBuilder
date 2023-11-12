@@ -1,0 +1,19 @@
+.all {
+    background: linear-gradient(120deg, #2b3033, #5602ff);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 560px
+}
+/* .user-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+} */
+
+/* label {
+    display: block;
+    margin-bottom: 5px;
+} */

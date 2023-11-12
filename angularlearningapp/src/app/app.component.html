@@ -1,0 +1,13 @@
+ <app-navbar></app-navbar>
+ <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+ 
+ <div class="all">
+    <div>
+        <app-user-form></app-user-form>
+    </div>
+
+    <div *ngIf="logged">
+        <h1>Hello world</h1>
+        <app-rooms></app-rooms>
+    </div>
+</div>
