@@ -1,8 +1,8 @@
 .all {
-    background: linear-gradient(120deg, #2b3033, #5602ff);
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 560px
+  background: linear-gradient(120deg, #850f67, #265ae7);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 960px;
 }
 /* .user-form {
     display: flex;

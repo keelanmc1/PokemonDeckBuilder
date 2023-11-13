@@ -1,0 +1,4 @@
+:host ::ng-deep .dark-menubar {
+  background-color: #292727;
+  color: white;
+}

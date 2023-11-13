@@ -1,11 +1,21 @@
 import { Component } from '@angular/core';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent {
-  loggedIn = true;
-
+  items: MenuItem[] = [
+    {
+      label: 'Login/Register',
+    },
+    {
+      label: 'Home',
+    },
+    {
+      label: 'Log Out',
+    },
+  ];
 }

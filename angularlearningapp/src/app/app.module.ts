@@ -10,16 +10,18 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import {CardModule} from 'primeng/card';
+import { CardModule } from 'primeng/card';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ButtonModule } from 'primeng/button';
+import { MenubarModule } from 'primeng/menubar';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
     AppComponent,
     RoomsComponent,
     NavbarComponent,
-    UserFormComponent
+    UserFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,8 +33,10 @@ import { ButtonModule } from 'primeng/button';
     CardModule,
     BrowserAnimationsModule,
     ButtonModule,
+    MenubarModule,
+    ToastModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

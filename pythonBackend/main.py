@@ -6,7 +6,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from datetime import timedelta
 
 client = MongoClient('mongodb://localhost:27017')
-db = client.FullStackAss
+db = client.FullStackAssignment
 collection = db.Users
 
 
@@ -35,32 +35,37 @@ def create_user():
         access_token = create_access_token(identity=user['username'])
         response = make_response(jsonify({'msg': 'User successfully registered'}),200)
         expiration_time = timedelta(hours=1)
-        response.set_cookie('access_token_cookie', value=access_token, httponly=True, secure=True, samesite='Strict', max_age=expiration_time.seconds)
+        response.set_cookie('access_token_cookie', value=access_token, httponly=True, secure=False, samesite='Strict', max_age=expiration_time.seconds)
         return response
     else:
         return make_response(jsonify({'msg': 'user already exists'}))
 
+@cross_origin
 @app.route('/api/v1.0/user/login', methods=['POST'])
 def login_user():
     posted = request.get_json()
     found_user = collection.find_one({'username': posted['username']})
-    is_valid_password = bcrypt.check_password_hash(found_user['password'], posted['password'])
 
-    if is_valid_password:
-        return make_response(jsonify({'msg': 'logged in succesfully'}), 200)
+    if found_user:
+        is_valid_password = bcrypt.check_password_hash(found_user['password'], posted['password'])
+
+        if is_valid_password:
+            return make_response(jsonify({'msg': 'logged in succesfully'}), 200)
+        else:
+            return make_response(jsonify({'msg': 'invalid credentials'}))
     else:
-        return make_response(jsonify({'msg': 'invalid credentials'}),403)
-
+        return make_response(jsonify({"error": "User does not exist"}))
+    
 @app.route('/api/v1.0/users', methods=['GET'])
 @jwt_required(locations=['cookies'])
 def get_all_users():
     user_list = []
-    users = collection.find({})
+    users = collection.find({}, {'password': 0})
 
     for user in users:
         user['_id'] = str(user['_id'])
         user_list.append(user)
-    return make_response(jsonify(user_list))
+    return make_response(jsonify(user_list), 200)
 
 if __name__ == '__main__':
     app.run(debug=True)
