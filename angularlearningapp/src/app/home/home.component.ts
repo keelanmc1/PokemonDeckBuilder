@@ -20,18 +20,15 @@ export class HomeComponent {
      private pokemonService : PokemonService) {}
 
   ngOnInit() {
-    this.http.get('http://127.0.0.1:5000/api/v1.0/pokemon').subscribe((response:any) => this.pokemon = response);
-      
+      this.pokemonService.GetAllPokemon().subscribe((response : any) => this.pokemon = response)
   }
 
   onClick(pokiName : string) {
     this.pokemonService.GetPokemonByName(pokiName).subscribe((data:any) => {
-      console.log('Pokemon details:', data);
 
-    console.log("before dialog: "+ JSON.stringify(this.pokemon))
     if (data) {
       this.ref = this.dialogService.open(PokemonDialogComponent, {
-        header: 'Pokemon Information',
+        header: `${pokiName}'s Information`,
         width: '70%',
         contentStyle: { overflow: 'auto' },
         baseZIndex: 10000,

@@ -13,8 +13,6 @@ export class PokemonDialogComponent {
 
   ngOnInit() {
     this.pokemon = this.config.data.pokemon;
-    // console.log('PokemonDialogComponent data:', this.config.data);
-    // console.log('PokemonDialogComponent pokemon:', this.pokemon);
     console.log("we are here " + this.pokemon.name)
   }
 }
