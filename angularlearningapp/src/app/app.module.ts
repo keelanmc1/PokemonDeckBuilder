@@ -15,6 +15,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ButtonModule } from 'primeng/button';
 import { MenubarModule } from 'primeng/menubar';
 import { ToastModule } from 'primeng/toast';
+import { HomeComponent } from './home/home.component';
+import { DataViewModule } from 'primeng/dataview';
+import { PokemonDialogComponent } from './pokemon-dialog/pokemon-dialog.component';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+
 
 @NgModule({
   declarations: [
@@ -22,7 +27,9 @@ import { ToastModule } from 'primeng/toast';
     RoomsComponent,
     NavbarComponent,
     UserFormComponent,
-  ],
+    HomeComponent,
+    PokemonDialogComponent,
+  ],  
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -35,6 +42,8 @@ import { ToastModule } from 'primeng/toast';
     ButtonModule,
     MenubarModule,
     ToastModule,
+    DataViewModule,
+    DynamicDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

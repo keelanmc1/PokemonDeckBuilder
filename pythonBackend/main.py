@@ -8,6 +8,7 @@ from datetime import timedelta
 client = MongoClient('mongodb://localhost:27017')
 db = client.FullStackAssignment
 collection = db.Users
+pokemon_collection = db.pokemon
 
 
 app = Flask(__name__)
@@ -29,7 +30,8 @@ def create_user():
     if not check_if_user_exists:
         user = {
             'username': posted['username'],
-            'password': hashed_password
+            'password': hashed_password,
+            'decks':[],
         }
         collection.insert_one(user)
         access_token = create_access_token(identity=user['username'])
@@ -66,6 +68,27 @@ def get_all_users():
         user['_id'] = str(user['_id'])
         user_list.append(user)
     return make_response(jsonify(user_list), 200)
+
+
+@jwt_required
+@cross_origin
+@app.route('/api/v1.0/pokemon', methods=['GET'])
+def get_all_pokemon():
+    pokemon_list = []
+    pokemon = pokemon_collection.find({})
+
+    for poki in pokemon:
+        poki['_id'] = str(poki['_id'])
+        pokemon_list.append(poki)
+    return make_response(jsonify(pokemon_list), 200)
+
+@jwt_required
+@cross_origin
+@app.route('/api/v1.0/pokemon/<name>', methods=['GET'])
+def get_pokemon_by_name(name):
+    pokemon = pokemon_collection.find_one({'name': name})
+    pokemon['_id'] = str(pokemon['_id'])
+    return make_response(jsonify(pokemon))
 
 if __name__ == '__main__':
     app.run(debug=True)
