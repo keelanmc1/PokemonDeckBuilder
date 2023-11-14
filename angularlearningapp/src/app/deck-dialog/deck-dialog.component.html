@@ -12,6 +12,6 @@
     placeholder="Deck description"
     [(ngModel)]="deck.description"
   />
-  <p-button *ngIf="!isEditMode" (click)="onClick()" label="Submit"></p-button>
-  <p-button *ngIf="isEditMode" (click)="onClickEdit()" label="Edit"></p-button>
+  <p-button *ngIf="!isEditMode" [disabled]="!deck.name || ! deck.description" (click)="onClick()" label="Submit"></p-button>
+  <p-button *ngIf="isEditMode" [disabled]="!deck.name || ! deck.description" (click)="onClickEdit()" label="Edit"></p-button>
 </div>
