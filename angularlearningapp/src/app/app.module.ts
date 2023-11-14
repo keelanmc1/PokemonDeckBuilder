@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { RoomsComponent } from './rooms/rooms.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,17 +18,21 @@ import { HomeComponent } from './home/home.component';
 import { DataViewModule } from 'primeng/dataview';
 import { PokemonDialogComponent } from './pokemon-dialog/pokemon-dialog.component';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
-
+import { DeckComponent } from './deck/deck.component';
+import { DeckDialogComponent } from './deck-dialog/deck-dialog.component';
+import { DeckInfoComponent } from './deck-info/deck-info.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RoomsComponent,
     NavbarComponent,
     UserFormComponent,
     HomeComponent,
     PokemonDialogComponent,
-  ],  
+    DeckComponent,
+    DeckDialogComponent,
+    DeckInfoComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -1,21 +1,33 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PokemonService {
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
-  constructor(private http: HttpClient) { }
+  resonseToReturn: any;
 
-  resonseToReturn : any;
-
-  GetPokemonByName(name: string) : Observable<any> {
-    return this.http.get(`http://127.0.0.1:5000/api/v1.0/pokemon/${name}`)
+  private getHeaders(): HttpHeaders {
+    const token = this.authService.GetJwtToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    return headers;
   }
 
-  GetAllPokemon() : Observable<any> {
-    return this.http.get('http://127.0.0.1:5000/api/v1.0/pokemon');
+  GetPokemonByName(name: string): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.get(`http://127.0.0.1:5000/api/v1.0/pokemon/${name}`, {
+      headers,
+    });
+  }
+
+  GetAllPokemon(): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.get('http://127.0.0.1:5000/api/v1.0/pokemon', { headers });
   }
 }

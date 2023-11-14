@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgForm, NgModel } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { AppRoutingModule } from '../app-routing.module';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-user-form',
@@ -12,7 +14,9 @@ import { MessageService } from 'primeng/api';
 export class UserFormComponent {
   constructor(
     private http: HttpClient,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: AppRoutingModule,
+    private authService: AuthService
   ) {}
 
   users: { username: string; password: string } = {
@@ -43,6 +47,7 @@ export class UserFormComponent {
                 summary: 'Success',
                 detail: 'Registered successfully',
               });
+              this.authService.SetJwtToken(res.access_token);
             }
             console.log(res);
           });
@@ -57,9 +62,10 @@ export class UserFormComponent {
                 summary: 'Error',
                 detail: 'Incorrect credentials, please try again',
               });
+            } else {
+              this.authService.SetJwtToken(res.access_token);
+              this.router.RedirectToDeckPage();
             }
-
-            console.log(res);
           });
       }
     } else {

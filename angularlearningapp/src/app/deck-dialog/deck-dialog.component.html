@@ -1,0 +1,17 @@
+<div class="form-container">
+  <p-toast></p-toast>
+  <input
+    pInputText
+    type="text"
+    placeholder="Deck name"
+    [(ngModel)]="deck.name"
+  />
+  <input
+    pInputText
+    type="text"
+    placeholder="Deck description"
+    [(ngModel)]="deck.description"
+  />
+  <p-button *ngIf="!isEditMode" (click)="onClick()" label="Submit"></p-button>
+  <p-button *ngIf="isEditMode" (click)="onClickEdit()" label="Edit"></p-button>
+</div>
