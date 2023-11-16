@@ -8,37 +8,38 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent {
-  constructor(private authService: AuthService) {
-    this.UpdateMenuItems();
-  }
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    this.UpdateMenuItems();
+    this.authService.isUserLoggedIn.subscribe((isLoggedIn) => {
+      this.UpdateMenuItems(isLoggedIn);
+    });
   }
 
   items: MenuItem[] = [];
 
-  private SetMenuItems(): MenuItem[] {
+  private SetMenuItems(isLoggedIn: boolean): MenuItem[] {
     console.log('updated menu method called');
 
-    if (this.authService.IsLoggedIn()) {
+    if (isLoggedIn) {
       return [
-          { label: 'Decks', routerLink: '/deck' },
-          { label: 'Pokemon', routerLink: '/home' },
-          { label: 'Log Out', routerLink: '/login', command: () => this.authService.LogUserOut() },
-        ];
+        { label: 'Decks', routerLink: '/deck' },
+        { label: 'Pokemon', routerLink: '/home' },
+        {
+          label: 'Log Out',
+          routerLink: '/login',
+          command: () => this.authService.LogUserOut(),
+        },
+      ];
     } else {
       return [{ label: 'Login/Register', routerLink: '/login' }];
     }
   }
 
-  UpdateMenuItems() {
-    this.items = this.SetMenuItems();
+  UpdateMenuItems(isLoggedIn: boolean) {
+    this.items = this.SetMenuItems(isLoggedIn);
   }
 
-  get menuItems(): MenuItem[] {
-    return this.SetMenuItems();
-  }
   // items: MenuItem[] = [
   //   {
   //     label: 'Login/Register',

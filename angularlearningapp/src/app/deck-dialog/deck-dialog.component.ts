@@ -36,8 +36,7 @@ export class DeckDialogComponent {
           summary: 'Success',
           detail: 'Deck successfully Created',
         });
-      }
-      if (res.status !== 200) {
+      } else {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',

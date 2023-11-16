@@ -9,8 +9,11 @@ export class AuthService {
   private jwtToken: string | null = null;
   private jwtHelper: JwtHelperService = new JwtHelperService();
 
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  isUserLoggedIn: Observable<boolean> = this.isLoggedInSubject.asObservable();
+
   ngOnInit() {
-    this.IsLoggedIn()
+    this.IsLoggedIn();
   }
   SetJwtToken(token: string): void {
     // this.jwtToken = token;
@@ -28,8 +31,10 @@ export class AuthService {
       const isTokenExpired = this.jwtHelper.isTokenExpired(token);
       if (isTokenExpired) {
         this.ClearLocalStorage();
+        this.isLoggedInSubject.next(false);
         return false;
       }
+      this.isLoggedInSubject.next(true);
       return true;
     }
     return false;
@@ -41,9 +46,10 @@ export class AuthService {
   }
 
   LogUserOut() {
-    console.log("user logging out")
+    console.log('user logging out');
     const token = this.GetJwtToken();
     localStorage.removeItem('jwtToken');
+    this.isLoggedInSubject.next(false);
   }
 
   constructor() {}

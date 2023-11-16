@@ -1,26 +1,25 @@
 <div>
   <p><b>Name:</b> {{ deck.name }}</p>
   <p><b>Description:</b> {{ deck.description }}</p>
-  <br>
+  <br />
   <p><b>Pokemon:</b></p>
-  <br>
-  <p *ngFor="let poki of deck.pokemon">{{poki.name}}
+  <br />
+
+  <p *ngIf="deck.pokemon && deck.pokemon.length > 0"></p>
+  <p *ngFor="let poki of deck.pokemon">
+    {{ poki.name }}
     <img [src]="poki.img" alt="{{ poki.name }}" />
     <p-button
-    class="delete-button"
-    icon="pi pi-trash"
-    (click)="deleteOnClick(deck._id, poki._id)"
-    [rounded]="true"
-    [text]="true"
-    severity="danger "
-  ></p-button>
+      class="delete-button"
+      icon="pi pi-trash"
+      (click)="deleteOnClick(deck._id, poki._id)"
+      [rounded]="true"
+      [text]="true"
+      severity="danger "
+    ></p-button>
   </p>
-
-
-  <!-- <p>Height: {{ pokemon.height }}</p>
-  <p>Weight: {{ pokemon.weight }}</p>
-  <p>candy: {{ pokemon.candy }}</p>
-  <p>spawn chance: {{ pokemon.spawn_chance }}</p>
-  <p>weaknesses: {{ pokemon.weaknesses }}</p> -->
-  <!-- <p>next evolution: {{pokemon.next_evolution.join(',')}}</p> -->
+  <p *ngIf="!deck.pokemon || deck.pokemon.length === 0">
+    No pokemon collection in the deck!
+  </p>
+  <!-- </p> -->
 </div>

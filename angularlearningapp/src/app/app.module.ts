@@ -17,10 +17,11 @@ import { ToastModule } from 'primeng/toast';
 import { HomeComponent } from './home/home.component';
 import { DataViewModule } from 'primeng/dataview';
 import { PokemonDialogComponent } from './pokemon-dialog/pokemon-dialog.component';
-import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { DeckComponent } from './deck/deck.component';
 import { DeckDialogComponent } from './deck-dialog/deck-dialog.component';
 import { DeckInfoComponent } from './deck-info/deck-info.component';
+import { AuthGuard } from './auth-guard';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,7 @@ import { DeckInfoComponent } from './deck-info/deck-info.component';
     DataViewModule,
     DynamicDialogModule,
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

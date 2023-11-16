@@ -9,7 +9,7 @@ from bson import ObjectId
 client = MongoClient('mongodb://localhost:27017')
 db = client.FullStackAssignment
 collection = db.Users
-pokemon_collection = db.pokemon
+pokemon_collection = db.Pokemon
 
 
 app = Flask(__name__)
@@ -141,12 +141,15 @@ def create_deck():
 def get_all_decks():
     current_user_id = get_jwt_identity()
     deck_list = []
-    user = collection.find_one({'username': current_user_id}, {"decks" : 1})
+    result = collection.find_one({'username': current_user_id}, {"decks" : 1})
 
-    for deck in user['decks']:
-        deck['_id'] = str(deck['_id'])
-        deck_list.append(deck)
-    return make_response(jsonify(deck_list))
+    if result:
+        for deck in result['decks']:
+            deck['_id'] = str(deck['_id'])
+            deck_list.append(deck)
+        return make_response(jsonify(deck_list), 200)
+    else:
+        make_response(jsonify({'msg': 'No decks retrieved'}))
 
 # @app.route('/api/v1.0/users/deck/<deckName>', methods=['GET'])
 # @jwt_required()
