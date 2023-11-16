@@ -1,0 +1,13 @@
+.deck-button {
+    cursor: pointer;
+    padding: 8px;
+    margin: 4px;
+    border: 0.5px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    transition: background-color 0.3s ease;  
+  }
+  
+  .deck-button:hover {
+    background-color: #e0e0e0;
+  }

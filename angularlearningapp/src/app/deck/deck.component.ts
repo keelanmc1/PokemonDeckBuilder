@@ -5,7 +5,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { DeckDialogComponent } from '../deck-dialog/deck-dialog.component';
 import { DeckService } from '../deck.service';
-import { interval } from 'rxjs';
+import { Observable, interval } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DeckInfoComponent } from '../deck-info/deck-info.component';
 
@@ -24,8 +24,8 @@ export class DeckComponent {
     private authService: AuthService,
     public dialogService: DialogService,
     private deckService: DeckService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService) 
+    {} 
 
   async ngOnInit() {
     const token = this.authService.GetJwtToken();
@@ -35,7 +35,7 @@ export class DeckComponent {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
       };
 
-      // setting up the component to listen to the endpoint for updates to dynamically display new data.
+      // setting up polling to listen to the endpoint for updates to dynamically display new data.
       interval(500)
         .pipe(
           switchMap(() =>
@@ -52,21 +52,26 @@ export class DeckComponent {
         );
     }
   }
+
   onClick(deckId: string) {
-    console.log(deckId);
-    this.deckService.GetDeckInformation(deckId).subscribe((res) => {
+     this.deckService.GetDeckInformation(deckId).subscribe((res) => {
       console.log('successfully request');
-      this.ref = this.dialogService.open(DeckInfoComponent, {
-        header: `Deck Information`,
-        width: '70%',
-        contentStyle: { overflow: 'auto' },
-        baseZIndex: 10000,
-        maximizable: true,
-        data: {
-          deck: res,
-        },
-      });
+    this.ref = this.dialogService.open(DeckInfoComponent, {
+      header: `Deck Information`,
+      width: '70%',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      maximizable: true,
+      data: {
+        deck: res,
+      },
     });
+    });
+  }
+
+  openDialog() {
+
+
   }
 
   onClickCreate() {

@@ -1,4 +1,4 @@
-<div *ngIf="pokemon">
+<div *ngIf="!isAdd">
     <img [src]="pokemon.img" alt="{{ pokemon.name }}" />
     <p>Name: {{ pokemon.name }}</p>
     <p>Type: {{ pokemon.type?.join(', ') }}</p>
@@ -7,6 +7,12 @@
     <p>candy: {{pokemon.candy}}</p>
     <p>spawn chance: {{pokemon.spawn_chance}}</p>
     <p>weaknesses: {{pokemon.weaknesses}}</p>
-    <!-- <p>next evolution: {{pokemon.next_evolution.join(',')}}</p> -->
   </div>
+
+  <div *ngIf="isAdd">
+    <div *ngFor="let deck of deckData" class="deck-button" (click)="onDeckClick(deck._id, pokemon)">
+      {{ deck.name }}
+    </div>
+  </div>
+  
   

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,9 @@ export class AuthService {
   private jwtToken: string | null = null;
   private jwtHelper: JwtHelperService = new JwtHelperService();
 
+  ngOnInit() {
+    this.IsLoggedIn()
+  }
   SetJwtToken(token: string): void {
     // this.jwtToken = token;
     localStorage.setItem('jwtToken', token);
@@ -22,24 +26,24 @@ export class AuthService {
     const token = this.GetJwtToken();
     if (token) {
       const isTokenExpired = this.jwtHelper.isTokenExpired(token);
-
       if (isTokenExpired) {
         this.ClearLocalStorage();
         return false;
       }
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
+
   private ClearLocalStorage() {
     const token = this.GetJwtToken();
-    localStorage.removeItem(String(token));
+    localStorage.removeItem('jwtToken');
   }
 
   LogUserOut() {
+    console.log("user logging out")
     const token = this.GetJwtToken();
-    localStorage.removeItem(String(token));
+    localStorage.removeItem('jwtToken');
   }
 
   constructor() {}

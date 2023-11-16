@@ -1,6 +1,22 @@
 <div>
-  <p>Name: {{ deck.name }}</p>
-  <p>Description: {{ deck.description }}</p>
+  <p><b>Name:</b> {{ deck.name }}</p>
+  <p><b>Description:</b> {{ deck.description }}</p>
+  <br>
+  <p><b>Pokemon:</b></p>
+  <br>
+  <p *ngFor="let poki of deck.pokemon">{{poki.name}}
+    <img [src]="poki.img" alt="{{ poki.name }}" />
+    <p-button
+    class="delete-button"
+    icon="pi pi-trash"
+    (click)="deleteOnClick(deck._id, poki._id)"
+    [rounded]="true"
+    [text]="true"
+    severity="danger "
+  ></p-button>
+  </p>
+
+
   <!-- <p>Height: {{ pokemon.height }}</p>
   <p>Weight: {{ pokemon.weight }}</p>
   <p>candy: {{ pokemon.candy }}</p>
