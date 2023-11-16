@@ -9,7 +9,7 @@ from bson import ObjectId
 client = MongoClient('mongodb://localhost:27017')
 db = client.FullStackAssignment
 collection = db.Users
-pokemon_collection = db.Pokemon
+pokemon_collection = db.pokemon
 
 
 app = Flask(__name__)
@@ -125,11 +125,9 @@ def create_deck():
             deck = {
                 '_id': ObjectId(),
                 'name': posted['name'],
-                'description': posted['description']
+                'description': posted['description'],
+                'pokemon': []
             }
-
-            if 'decks' not in user:
-                user['decks'] = []
 
             collection.update_one({'username': current_user}, {'$push': {'decks': deck}})
             return make_response(jsonify({'msg': 'deck successfully posted'}), 200)
@@ -176,6 +174,19 @@ def get_deck_by_id(deckId):
         return make_response(jsonify({"msg": "invalid deck ID"}), 404)
     else:
         return make_response(jsonify({'msg': 'Invalid credentials'}))
+
+@app.route('/api/v1.0/users/deck', methods=['GET'])
+def get_all_user_decks():
+    current_user = get_jwt_identity()
+    user_decks = []
+    if current_user:
+        user = collection.find_one({'username': current_user}, {'decks': 1})
+        for deck in user['decks']:
+            deck['_id'] = str(deck['_id'])
+            user_decks.append(deck)
+        return make_response(jsonify(user_decks), 200)
+    else:
+        return make_response(jsonify({'msg': 'Invalid user'}), 404)
     
 @app.route('/api/v1.0/users/deck/<deckId>', methods=['DELETE'])
 @jwt_required()
@@ -199,7 +210,7 @@ def edit_deck_by_id(deckId):
     posted_data = request.get_json()
 
     print(posted_data)
-    if 'name' in posted_data or 'description' in posted_data:
+    if 'name' in posted_data or 'description' in posted_data or 'pokemon' in posted_data:
         if current_user_id:
             deck_query = {'_id': ObjectId(deckId)}
             user_query = {'username': current_user_id, 'decks._id': ObjectId(deckId)}
@@ -210,7 +221,11 @@ def edit_deck_by_id(deckId):
 
             if 'description' in posted_data:
                 update_data['$set']['decks.$.description'] = posted_data['description']
+            
+            if 'pokemon' in posted_data:
+                collection.update_one(user_query, {'$push': {'decks.$.pokemon': posted_data['pokemon']}})
 
+            
             result = collection.update_one(user_query, update_data)
 
             if result.matched_count > 0:
@@ -220,12 +235,35 @@ def edit_deck_by_id(deckId):
         else:
             return make_response(jsonify({'msg': 'Invalid credentials'}), 401)
         
+@app.route('/api/v1.0/user/deck/<deckId>/<pokemonId>', methods=['DELETE'])
+@jwt_required()
+def delete_pokemon_from_deck(deckId, pokemonId):
+    current_user = get_jwt_identity()
+    if current_user:
+        user_query = {'username': current_user, 'decks._id': ObjectId(deckId)}
+        if user_query:
+            # collection.update_one(user_query, {'$pull':{"pokemon":{'_id':ObjectId(pokemonId)}}})
+            result = collection.update_one(
+                {'username': current_user, 'decks._id': ObjectId(deckId)},
+                {'$pull': {'decks.$.pokemon': {'_id': pokemonId}}})
+            
+            if result.matched_count > 0:
+                return make_response(jsonify({'msg': 'pokemon successfully deleted'}), 200)
+            else:
+                return make_response(jsonify({'msg': 'something went wrong'}))
+        else:
+            return make_response(jsonify({'msg': 'invalid id'}), 404)
+    else:
+        return make_response(jsonify({'msg': 'Invalid user'}))
+
+
+        
 @app.route('/api/v1.0/user/logout')
 @jwt_required()
 def log_user_out():
     current_user = get_jwt_identity()
     response = make_response(jsonify({'msg': 'user successfully logged out'}))
-    unset_jwt_cookie(response)
+    unset_jwt_cookies(response)
     return response
 
 if __name__ == '__main__':
