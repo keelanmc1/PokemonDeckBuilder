@@ -16,12 +16,10 @@ export class AuthService {
     this.IsLoggedIn();
   }
   SetJwtToken(token: string): void {
-    // this.jwtToken = token;
     localStorage.setItem('jwtToken', token);
   }
 
   GetJwtToken(): string | null {
-    // return this.jwtToken;
     return localStorage.getItem('jwtToken');
   }
 

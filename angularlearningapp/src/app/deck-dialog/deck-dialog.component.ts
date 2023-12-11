@@ -47,9 +47,14 @@ export class DeckDialogComponent {
   }
 
   onClickEdit() {
+    const dataToPost = {
+      name: this.deck.name,
+      description: this.deck.description,
+    };
+
     console.log('DEBUG POINT: ' + this.deck.description);
     this.deckService
-      .EditDeckById(this.deck._id, this.deck)
+      .EditDeckById(this.deck._id, dataToPost)
       .subscribe((res: any) => {
         console.log(res);
         this.messageService.add({

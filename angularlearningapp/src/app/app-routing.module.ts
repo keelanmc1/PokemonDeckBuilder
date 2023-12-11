@@ -8,7 +8,10 @@ import { AuthGuard } from './auth-guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'login', component: UserFormComponent },
+  {
+    path: 'login',
+    component: UserFormComponent,
+  },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'deck', component: DeckComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/login' },
@@ -23,5 +26,9 @@ export class AppRoutingModule {
 
   RedirectToDeckPage() {
     this.router.navigate(['deck']);
+  }
+
+  RedirectToLogin() {
+    this.router.navigate(['login']);
   }
 }

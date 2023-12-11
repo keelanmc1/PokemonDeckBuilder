@@ -50,6 +50,9 @@ export class DeckService {
   }
 
   EditDeckById(deckId: string, data: any) {
+    console.log('viewing the state of the deck');
+    console.log(data);
+
     const token = this.authService.GetJwtToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -70,7 +73,9 @@ export class DeckService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.get('http://127.0.0.1:5000/api/v1.0/users/deck', {headers})
+    return this.http.get('http://127.0.0.1:5000/api/v1.0/users/deck', {
+      headers,
+    });
   }
 
   DeletePokemonFromDeck(deckId: string, pokemonId: string) {
@@ -79,7 +84,9 @@ export class DeckService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.delete(`http://127.0.0.1:5000/api/v1.0/user/deck/${deckId}/${pokemonId}`, {headers})
+    return this.http.delete(
+      `http://127.0.0.1:5000/api/v1.0/user/deck/${deckId}/${pokemonId}`,
+      { headers }
+    );
   }
-
 }

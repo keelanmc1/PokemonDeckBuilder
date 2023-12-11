@@ -5,19 +5,21 @@
   <p><b>Pokemon:</b></p>
   <br />
 
-  <p *ngIf="deck.pokemon && deck.pokemon.length > 0"></p>
-  <p *ngFor="let poki of deck.pokemon">
-    {{ poki.name }}
-    <img [src]="poki.img" alt="{{ poki.name }}" />
-    <p-button
-      class="delete-button"
-      icon="pi pi-trash"
-      (click)="deleteOnClick(deck._id, poki._id)"
-      [rounded]="true"
-      [text]="true"
-      severity="danger "
-    ></p-button>
-  </p>
+  <ng-container *ngIf="deck.pokemon && deck.pokemon.length > 0">
+    <p *ngFor="let poki of deck.pokemon">
+      {{ poki.name }}
+      <img [src]="poki.img" alt="{{ poki.name }}" />
+      <p-button
+        class="delete-button"
+        icon="pi pi-trash"
+        (click)="deleteOnClick(deck._id, poki._id)"
+        [rounded]="true"
+        [text]="true"
+        severity="danger"
+      ></p-button>
+    </p>
+  </ng-container>
+
   <p *ngIf="!deck.pokemon || deck.pokemon.length === 0">
     No pokemon collection in the deck!
   </p>
