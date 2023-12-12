@@ -9,7 +9,7 @@ import {
 import { AuthService } from './auth.service';
 
 @Injectable()
-export class AuthGuard implements CanActivate, CanActivate {
+export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
@@ -19,7 +19,6 @@ export class AuthGuard implements CanActivate, CanActivate {
     if (this.authService.IsLoggedIn()) {
       return true;
     } else {
-      this.router.navigate(['/login']);
       return false;
     }
   }

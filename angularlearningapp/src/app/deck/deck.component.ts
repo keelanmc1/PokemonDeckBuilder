@@ -24,8 +24,8 @@ export class DeckComponent {
     private authService: AuthService,
     public dialogService: DialogService,
     private deckService: DeckService,
-    private messageService: MessageService) 
-    {} 
+    private messageService: MessageService
+  ) {}
 
   async ngOnInit() {
     const token = this.authService.GetJwtToken();
@@ -36,6 +36,7 @@ export class DeckComponent {
       };
 
       // setting up polling to listen to the endpoint for updates to dynamically display new data.
+      // This could possibly be done a better way -- need to research
       interval(500)
         .pipe(
           switchMap(() =>
@@ -54,24 +55,19 @@ export class DeckComponent {
   }
 
   onClick(deckId: string) {
-     this.deckService.GetDeckInformation(deckId).subscribe((res) => {
+    this.deckService.GetDeckInformation(deckId).subscribe((res) => {
       console.log('successfully request');
-    this.ref = this.dialogService.open(DeckInfoComponent, {
-      header: `Deck Information`,
-      width: '70%',
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
-      maximizable: true,
-      data: {
-        deck: res,
-      },
+      this.ref = this.dialogService.open(DeckInfoComponent, {
+        header: `Deck Information`,
+        width: '70%',
+        contentStyle: { overflow: 'auto' },
+        baseZIndex: 10000,
+        maximizable: true,
+        data: {
+          deck: res,
+        },
+      });
     });
-    });
-  }
-
-  openDialog() {
-
-
   }
 
   onClickCreate() {

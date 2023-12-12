@@ -39,16 +39,4 @@ export class NavbarComponent {
   UpdateMenuItems(isLoggedIn: boolean) {
     this.items = this.SetMenuItems(isLoggedIn);
   }
-
-  // items: MenuItem[] = [
-  //   {
-  //     label: 'Login/Register',
-  //   },
-  //   {
-  //     label: 'Home',
-  //   },
-  //   {
-  //     label: 'Log Out',
-  //   },
-  // ];
 }

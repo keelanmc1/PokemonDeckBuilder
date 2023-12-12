@@ -26,14 +26,6 @@ export class UserFormComponent {
 
   isUsernameValid: boolean = true;
 
-  ngOnInit() {
-    if (this.authService.IsLoggedIn()) {
-      this.router.RedirectToDeckPage();
-    } else {
-      this.router.RedirectToLogin();
-    }
-  }
-
   onSubmit() {
     if (this.users && this.users.username && this.users.password) {
       if (!this.isLoginFormVisible) {

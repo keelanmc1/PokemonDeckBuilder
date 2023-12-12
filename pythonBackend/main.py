@@ -11,7 +11,6 @@ db = client.FullStackAssignment
 collection = db.Users
 pokemon_collection = db.Pokemon
 
-
 app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -72,18 +71,6 @@ def login_user():
             return make_response(jsonify({"error": "User does not exist"}), 409)
     else:
         return make_response(jsonify({'msg': 'Missing fields'}), 404)
-    
-# @app.route('/api/v1.0/users', methods=['GET'])
-# @jwt_required(locations=['cookies'])
-# def get_all_users():
-#     user_list = []
-#     users = collection.find({}, {'password': 0})
-
-#     for user in users:
-#         user['_id'] = str(user['_id'])
-#         user_list.append(user)
-#     return make_response(jsonify(user_list), 200)
-
 
 @cross_origin
 @app.route('/api/v1.0/pokemon', methods=['GET'])
@@ -107,8 +94,11 @@ def get_all_pokemon():
 def get_pokemon_by_name(name):
     if name:
         pokemon = pokemon_collection.find_one({'name': name})
-        pokemon['_id'] = str(pokemon['_id'])
-        return make_response(jsonify(pokemon), 200)
+        if pokemon:
+            pokemon['_id'] = str(pokemon['_id'])
+            return make_response(jsonify(pokemon), 200)
+        else:
+            return make_response(jsonify({'msg': 'Invalid pokemon'}), 404)
     else:
         return make_response(jsonify({'msg': 'missing name'}), 401)
 
@@ -151,17 +141,6 @@ def get_all_decks():
     else:
         make_response(jsonify({'msg': 'No decks retrieved'}), 204)
 
-# @app.route('/api/v1.0/users/deck/<deckName>', methods=['GET'])
-# @jwt_required()
-# def get_specific_deck(deck_name):
-#     current_user_id = get_jwt_identity()
-#     user = collection.find_one({'username': current_user_id}, {"decks" : 1})
-#     for deck in user["decks"]:
-#         if deck['name'] == deck_name:
-#             return make_response(jsonify(deck), 200)
-#         else:
-#             return make_response(jsonify({"msg": "Deck does not exist"}), 404)
-
 @app.route('/api/v1.0/users/deck/<deckId>', methods=['GET'])
 @jwt_required()
 def get_deck_by_id(deckId):
@@ -196,15 +175,16 @@ def get_all_user_decks():
 def delete_deck_by_id(deckId):
     current_user_id = get_jwt_identity()
 
-    if current_user_id:
-        user = collection.find_one({'username': current_user_id}, {'decks': 1})
-        for deck in user['decks']:
-            if deck['_id'] == ObjectId(deckId):
-                collection.update_one({'username': current_user_id}, {'$pull':{'decks':{'_id':ObjectId(deck['_id'])}}})
-                return make_response(jsonify({'msg':'deck successfully deleted'}), 200)
-        return make_response(jsonify({'msg': 'invalid deck ID'}), 404)
-    else:
-        return make_response(jsonify({'msg': 'Invalid credentials'}), 401)
+    if deckId:
+        if current_user_id:
+            user = collection.find_one({'username': current_user_id}, {'decks': 1})
+            for deck in user['decks']:
+                if deck['_id'] == ObjectId(deckId):
+                    collection.update_one({'username': current_user_id}, {'$pull':{'decks':{'_id': ObjectId(deck['_id'])}}})
+                    return make_response(jsonify({'msg':'deck successfully deleted'}), 200)
+            return make_response(jsonify({'msg': 'invalid deck ID'}), 404)
+        else:
+            return make_response(jsonify({'msg': 'Invalid credentials'}), 401)
     
 @app.route('/api/v1.0/users/deck/<deckId>', methods=['PUT'])
 @jwt_required()
@@ -212,10 +192,8 @@ def edit_deck_by_id(deckId):
     current_user_id = get_jwt_identity()
     posted_data = request.get_json()
 
-    print(posted_data)
     if 'name' in posted_data or 'description' in posted_data or 'pokemon' in posted_data:
         if current_user_id:
-            deck_query = {'_id': ObjectId(deckId)}
             user_query = {'username': current_user_id, 'decks._id': ObjectId(deckId)}
             update_data = {'$set': {}}
 
@@ -226,7 +204,15 @@ def edit_deck_by_id(deckId):
                 update_data['$set']['decks.$.description'] = posted_data['description']
             
             if 'pokemon' in posted_data:
-                # collection.update_one(user_query, {'$push': {'decks.$.pokemon': posted_data['pokemon']}})
+                result = collection.find_one({'username': current_user_id, 'decks._id': ObjectId(deckId)}, {'decks.$': 1})
+                if result:
+                    deck = result['decks'][0]
+
+                # Traverse the pokemon objects in the deck and ensure that the pokemon doesn't already exist
+                for pokemon in deck['pokemon']:
+                    if str(pokemon['_id']) == posted_data['pokemon']['_id']:
+                        return make_response(jsonify({'msg': 'Pokemon already in deck!!'}))
+
                 update_data['$push'] = {'decks.$.pokemon': posted_data['pokemon']}
 
             result = collection.update_one(user_query, update_data)
@@ -237,24 +223,26 @@ def edit_deck_by_id(deckId):
                 return make_response(jsonify({'msg': 'Invalid deck ID'}), 404)
         else:
             return make_response(jsonify({'msg': 'Invalid credentials'}), 401)
+    else:
+        return make_response(jsonify({'msg': 'Missing fields'}), 400)
         
 @app.route('/api/v1.0/user/deck/<deckId>/<pokemonId>', methods=['DELETE'])
 @jwt_required()
 def delete_pokemon_from_deck(deckId, pokemonId):
     current_user = get_jwt_identity()
     if current_user:
-        user_query = {'username': current_user, 'decks._id': ObjectId(deckId)}
+        user_query = collection.find_one({'username': current_user, 'decks._id': ObjectId(deckId)})
         if user_query:
             result = collection.update_one(
                 {'username': current_user, 'decks._id': ObjectId(deckId)},
                 {'$pull': {'decks.$.pokemon': {'_id': pokemonId}}})
             
-            if result.matched_count > 0:
+            if result.modified_count > 0:
                 return make_response(jsonify({'msg': 'pokemon successfully deleted'}), 200)
             else:
-                return make_response(jsonify({'msg': 'something went wrong'}))
+                return make_response(jsonify({'msg': 'The pokemon does not exist in this deck'}), 404)
         else:
-            return make_response(jsonify({'msg': 'invalid id'}), 404)
+            return make_response(jsonify({'msg': 'invalid deck ID'}), 404)
     else:
         return make_response(jsonify({'msg': 'Invalid user'}), 401)
 

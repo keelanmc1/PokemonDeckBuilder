@@ -14,42 +14,54 @@ export class PokemonDialogComponent implements OnInit {
 
   isAdd: boolean = true;
 
-  constructor(private config: DynamicDialogConfig, private deckService: DeckService,
-    private messageService: MessageService) {}
+  constructor(
+    private config: DynamicDialogConfig,
+    private deckService: DeckService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
-    this.pokemon = {}
-    if (this.config.data && this.config.data.pokemon && !this.config.data.deckData) {
+    this.pokemon = {};
+    if (
+      this.config.data &&
+      this.config.data.pokemon &&
+      !this.config.data.deckData
+    ) {
       this.pokemon = this.config.data.pokemon;
       this.isAdd = false;
-    } 
-    else if (this.config.data && this.config.data.deckData && this.config.data.pokemon){
-      console.log(this.config.data.deckData)
+    } else if (
+      this.config.data &&
+      this.config.data.deckData &&
+      this.config.data.pokemon
+    ) {
+      console.log(this.config.data.deckData);
       this.deckData = this.config.data.deckData;
-      this.pokemon = this.config.data.pokemon
+      this.pokemon = this.config.data.pokemon;
       this.isAdd = true;
-    }
-    else {
-      console.log("No data present on the component!")
     }
   }
 
   onDeckClick(deckId: string, pokemon: any) {
-    console.log(this.config.data.pokemon._id)
     const pokiData = {
-      "pokemon": pokemon
-    }
+      pokemon: pokemon,
+    };
 
-    this.deckService.EditDeckById(deckId, pokiData)
-      .subscribe((res: any) => {
-        console.log(res);
-        if (res.msg == 'deck successfully updated') {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Pokemon successfully added to deck!',
-          });
-        }
-      })
+    this.deckService.EditDeckById(deckId, pokiData).subscribe((res: any) => {
+      console.log(res);
+      if (res.msg == 'deck successfully updated') {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Pokemon successfully added to deck!',
+        });
+      }
+      if (res.msg == 'Pokemon already in deck!!') {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Selected pokemon is already in the deck!',
+        });
+      }
+    });
   }
 }
